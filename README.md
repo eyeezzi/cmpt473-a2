@@ -44,4 +44,8 @@ Runs the csv2json executable redirecting stdout to a json file and stderr to a l
 - `cmd >> file` append stdout of cmd to file.
 - `cmd 2>> file` append stderr of cmd to file.
 
+### Running ACTS3.0
+
+	java -jar acts_3.0.jar 
+
 ## TODO
