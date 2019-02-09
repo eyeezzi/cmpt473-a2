@@ -8,6 +8,7 @@ import (
 	"strings"
 	"os/exec"
 	"errors"
+	"flag"
 )
 
 func getFiles(dir string) []string {
@@ -21,7 +22,7 @@ func getFiles(dir string) []string {
 	return list
 }
 
-func runSUT(csvFile, jsonDir, msgDir string, noHeaderFlag string) (jsonFile string, msgFile string) {
+func runSUT(sutPath, csvFile, jsonDir, msgDir string, noHeaderFlag string) (jsonFile string, msgFile string) {
 	// setup the destination files
 	ext := filepath.Ext(csvFile)
 	filename := strings.TrimSuffix(filepath.Base(csvFile), ext)
@@ -30,8 +31,7 @@ func runSUT(csvFile, jsonDir, msgDir string, noHeaderFlag string) (jsonFile stri
 	msgFile = fmt.Sprintf("%s.log", filepath.Join(msgDir, filename))
 
 	// run the software-under-test
-	// cmd := fmt.Sprintf("cat %s | ./csv2json > %s 2> %s", csvFile, jsonFile, msgFile)
-	cmd := fmt.Sprintf("./bin/csv2json --src %s %s > %s 2> %s", csvFile, noHeaderFlag, jsonFile, msgFile)
+	cmd := fmt.Sprintf("%s %s --src %s  1> %s 2> %s", sutPath, noHeaderFlag, csvFile, jsonFile, msgFile)
 
 	c := exec.Command("bash", "-c", cmd)
 	if err := c.Run(); err != nil {
@@ -64,9 +64,11 @@ func clean(dirs ...string) {
 }
 
 func main() {
-	verbose := false
+	verbosePtr := flag.Bool("verbose", false, "Shows the actual values that fail a test.")
+	sutPathPtr := flag.String("sut", "./bin/csv2json", "Relative or absolute path to the software-under-test.")
 
-	// sut := "csv2json"
+	flag.Parse()
+
 	testFilesDir := "TestData/TestFiles"
 
 	expOutDir := "TestData/ExpectedOutput"
@@ -107,10 +109,12 @@ Running Tests
 
 	fmt.Println("Cleaning Output Directories\n")
 
+	passCount := 0
+
 	for i, file := range testFiles {
 		
 		// run the testfile
-		outFile, msgFile := runSUT(file, outDir, msgDir, noHeaderFlags[i+1])
+		outFile, msgFile := runSUT(*sutPathPtr, file, outDir, msgDir, noHeaderFlags[i+1])
 
 		// Assert output == expectedOutput && msg = expectedMessage
 		outErr := diff(outFile, expOutFiles[i])
@@ -119,16 +123,22 @@ Running Tests
 		if outErr != nil || msgErr != nil { 
 			fmt.Printf("Test %v: failed\n", i+1)
 		} else {
+			passCount++
 			fmt.Printf("Test %v: passed\n", i+1)
 		}
 
-		if verbose && (outErr != nil) {	
+		if *verbosePtr && (outErr != nil) {	
 			fmt.Printf("\tOutput Diff: \n%s", outErr.Error())		
 		}
-		if verbose && (msgErr != nil) {
+		if *verbosePtr && (msgErr != nil) {
 			fmt.Printf("\tMessage Diff: \n%s", msgErr.Error())			
 		}
 	}
+
+	fmt.Printf(`-----------------------
+%v Passed, %v Failed
+`, passCount, len(testFiles)-passCount)
+
 }
 
 /* dumpster

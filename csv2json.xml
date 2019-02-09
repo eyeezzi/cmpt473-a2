@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<System name="csv2json">
+  <Parameters>
+    <Parameter id="0" name="Src_File_Exists" type="2">
+      <values>
+        <value>true</value>
+        <value>false</value>
+      </values>
+      <basechoices />
+      <invalidValues />
+    </Parameter>
+    <Parameter id="1" name="No_Header" type="2">
+      <values>
+        <value>true</value>
+        <value>false</value>
+      </values>
+      <basechoices />
+      <invalidValues />
+    </Parameter>
+    <Parameter id="2" name="Src" type="1">
+      <values>
+        <value>STDIN</value>
+        <value>DISKFILE</value>
+      </values>
+      <basechoices />
+      <invalidValues />
+    </Parameter>
+    <Parameter id="3" name="Dest" type="1">
+      <values>
+        <value>STDOUT</value>
+        <value>DISKFILE</value>
+      </values>
+      <basechoices />
+      <invalidValues />
+    </Parameter>
+    <Parameter id="4" name="File_With_Header" type="2">
+      <values>
+        <value>true</value>
+        <value>false</value>
+      </values>
+      <basechoices />
+      <invalidValues />
+    </Parameter>
+    <Parameter id="5" name="Number_Of_Records" type="1">
+      <values>
+        <value>ZERO</value>
+        <value>GTZERO</value>
+      </values>
+      <basechoices />
+      <invalidValues />
+    </Parameter>
+    <Parameter id="6" name="Field_Type_In_Record" type="1">
+      <values>
+        <value>ESCAPED</value>
+        <value>NONESCAPED</value>
+        <value>DONTCARE</value>
+      </values>
+      <basechoices />
+      <invalidValues />
+    </Parameter>
+    <Parameter id="7" name="Same_Field_Count_Per_Record" type="2">
+      <values>
+        <value>true</value>
+        <value>false</value>
+      </values>
+      <basechoices />
+      <invalidValues />
+    </Parameter>
+  </Parameters>
+  <OutputParameters />
+  <Relations />
+  <Constraints>
+    <Constraint text="Src = &quot;DISKFILE&quot;">
+      <Parameters>
+        <Parameter name="Src" />
+      </Parameters>
+    </Constraint>
+    <Constraint text="Dest = &quot;DISKFILE&quot;">
+      <Parameters>
+        <Parameter name="Dest" />
+      </Parameters>
+    </Constraint>
+    <Constraint text="Src_File_Exists = true">
+      <Parameters>
+        <Parameter name="Src_File_Exists" />
+      </Parameters>
+    </Constraint>
+    <Constraint text="Field_Type_In_Record = &quot;ESCAPED&quot; =&gt; Number_Of_Records = &quot;GTZERO&quot;">
+      <Parameters>
+        <Parameter name="Field_Type_In_Record" />
+        <Parameter name="Number_Of_Records" />
+      </Parameters>
+    </Constraint>
+    <Constraint text="Field_Type_In_Record = &quot;NONESCAPED&quot; =&gt; Number_Of_Records = &quot;GTZERO&quot;">
+      <Parameters>
+        <Parameter name="Field_Type_In_Record" />
+        <Parameter name="Number_Of_Records" />
+      </Parameters>
+    </Constraint>
+  </Constraints>
+  <Testset doi="2">
+    <Testcase TCNo="0">
+      <Value>1</Value>
+      <Value>true</Value>
+      <Value>false</Value>
+      <Value>DISKFILE</Value>
+      <Value>DISKFILE</Value>
+      <Value>false</Value>
+      <Value>GTZERO</Value>
+      <Value>ESCAPED</Value>
+      <Value>false</Value>
+    </Testcase>
+    <Testcase TCNo="1">
+      <Value>2</Value>
+      <Value>true</Value>
+      <Value>true</Value>
+      <Value>DISKFILE</Value>
+      <Value>DISKFILE</Value>
+      <Value>true</Value>
+      <Value>GTZERO</Value>
+      <Value>NONESCAPED</Value>
+      <Value>true</Value>
+    </Testcase>
+    <Testcase TCNo="2">
+      <Value>3</Value>
+      <Value>true</Value>
+      <Value>false</Value>
+      <Value>DISKFILE</Value>
+      <Value>DISKFILE</Value>
+      <Value>true</Value>
+      <Value>ZERO</Value>
+      <Value>DONTCARE</Value>
+      <Value>false</Value>
+    </Testcase>
+    <Testcase TCNo="3">
+      <Value>4</Value>
+      <Value>true</Value>
+      <Value>true</Value>
+      <Value>DISKFILE</Value>
+      <Value>DISKFILE</Value>
+      <Value>false</Value>
+      <Value>GTZERO</Value>
+      <Value>ESCAPED</Value>
+      <Value>true</Value>
+    </Testcase>
+    <Testcase TCNo="4">
+      <Value>5</Value>
+      <Value>true</Value>
+      <Value>true</Value>
+      <Value>DISKFILE</Value>
+      <Value>DISKFILE</Value>
+      <Value>false</Value>
+      <Value>ZERO</Value>
+      <Value>DONTCARE</Value>
+      <Value>true</Value>
+    </Testcase>
+    <Testcase TCNo="5">
+      <Value>6</Value>
+      <Value>true</Value>
+      <Value>false</Value>
+      <Value>DISKFILE</Value>
+      <Value>DISKFILE</Value>
+      <Value>false</Value>
+      <Value>GTZERO</Value>
+      <Value>NONESCAPED</Value>
+      <Value>false</Value>
+    </Testcase>
+    <Testcase TCNo="6">
+      <Value>7</Value>
+      <Value>true</Value>
+      <Value>false</Value>
+      <Value>DISKFILE</Value>
+      <Value>DISKFILE</Value>
+      <Value>true</Value>
+      <Value>GTZERO</Value>
+      <Value>ESCAPED</Value>
+      <Value>true</Value>
+    </Testcase>
+    <Testcase TCNo="7">
+      <Value>8</Value>
+      <Value>true</Value>
+      <Value>true</Value>
+      <Value>DISKFILE</Value>
+      <Value>DISKFILE</Value>
+      <Value>false</Value>
+      <Value>GTZERO</Value>
+      <Value>DONTCARE</Value>
+      <Value>false</Value>
+    </Testcase>
+  </Testset>
+  <Header>
+    <Value />
+    <Value>SRC_FILE_EXISTS</Value>
+    <Value>NO_HEADER</Value>
+    <Value>SRC</Value>
+    <Value>DEST</Value>
+    <Value>FILE_WITH_HEADER</Value>
+    <Value>NUMBER_OF_RECORDS</Value>
+    <Value>FIELD_TYPE_IN_RECORD</Value>
+    <Value>SAME_FIELD_COUNT_PER_RECORD</Value>
+  </Header>
+  <Stat-Data>
+    <ExecutionTime>0.172</ExecutionTime>
+    <MaxDomainSize>3</MaxDomainSize>
+    <MinDomainSize>2</MinDomainSize>
+    <TotalNoOfCombination>82</TotalNoOfCombination>
+    <TotalNoOfTests>8</TotalNoOfTests>
+    <Algorithm>IPOG</Algorithm>
+  </Stat-Data>
+</System>
+
