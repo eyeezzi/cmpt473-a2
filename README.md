@@ -3,6 +3,10 @@
 Uzziah Eyee   
 CMPT 473 SPR 2019
 
+Note: To run the test harness, you need to clone my repo for this assignment. It contains the `csv2json` and test harness `a2` binaries. These binaries were not included in the submission because they exceed the size limit.
+
+	git clone git@github.com:eyeezzi/cmpt473-a2.git
+
 ## Specification of SUT 
 
 csv2json https://github.com/baltimore-sun-data/csv2json
