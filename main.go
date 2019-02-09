@@ -21,7 +21,7 @@ func getFiles(dir string) []string {
 	return list
 }
 
-func runSUT(csvFile, jsonDir, msgDir string) (jsonFile string, msgFile string) {
+func runSUT(csvFile, jsonDir, msgDir string, noHeaderFlag string) (jsonFile string, msgFile string) {
 	// setup the destination files
 	ext := filepath.Ext(csvFile)
 	filename := strings.TrimSuffix(filepath.Base(csvFile), ext)
@@ -30,7 +30,8 @@ func runSUT(csvFile, jsonDir, msgDir string) (jsonFile string, msgFile string) {
 	msgFile = fmt.Sprintf("%s.log", filepath.Join(msgDir, filename))
 
 	// run the software-under-test
-	cmd := fmt.Sprintf("cat %s | ./csv2json > %s 2> %s", csvFile, jsonFile, msgFile)
+	// cmd := fmt.Sprintf("cat %s | ./csv2json > %s 2> %s", csvFile, jsonFile, msgFile)
+	cmd := fmt.Sprintf("./bin/csv2json --src %s %s > %s 2> %s", csvFile, noHeaderFlag, jsonFile, msgFile)
 
 	c := exec.Command("bash", "-c", cmd)
 	if err := c.Run(); err != nil {
@@ -63,7 +64,7 @@ func clean(dirs ...string) {
 }
 
 func main() {
-	verbose := true
+	verbose := false
 
 	// sut := "csv2json"
 	testFilesDir := "TestData/TestFiles"
@@ -78,27 +79,47 @@ func main() {
 	expOutFiles := getFiles(expOutDir)
 	expMsgFiles := getFiles(expMsgDir)
 
+	// No-header flag for each test configuration
+	noHeaderFlags := map[int]string {
+		1 : "",
+		2 : "-no-headers",
+		3 : "",
+		4 : "-no-headers",
+		5 : "-no-headers",
+		6 : "",
+		7 : "",
+		8 : "-no-headers",
+	}
+
 	// ensure every testfile has a corresponding expected output and message file
 	if !(len(testFiles) == len(expOutFiles) && len(testFiles) == len(expMsgFiles)) {
 		log.Fatal("Each TestFile requires an expectedOutput and expectedMessage file.")
 	}
 
+	fmt.Println(`
+-----------------------
+Running Tests
+-----------------------
+	`)
+
 	// clean the destination directories
 	clean(outDir, msgDir)
+
+	fmt.Println("Cleaning Output Directories\n")
 
 	for i, file := range testFiles {
 		
 		// run the testfile
-		outFile, msgFile := runSUT(file, outDir, msgDir)
+		outFile, msgFile := runSUT(file, outDir, msgDir, noHeaderFlags[i+1])
 
 		// Assert output == expectedOutput && msg = expectedMessage
 		outErr := diff(outFile, expOutFiles[i])
 		msgErr := diff(msgFile, expMsgFiles[i])
 
 		if outErr != nil || msgErr != nil { 
-			fmt.Printf("Test %v: failed ---------------------\n", i)
+			fmt.Printf("Test %v: failed\n", i+1)
 		} else {
-			fmt.Printf("Test %v: passed ---------------------\n", i)
+			fmt.Printf("Test %v: passed\n", i+1)
 		}
 
 		if verbose && (outErr != nil) {	

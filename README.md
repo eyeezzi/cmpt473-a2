@@ -44,8 +44,15 @@ Runs the csv2json executable redirecting stdout to a json file and stderr to a l
 - `cmd >> file` append stdout of cmd to file.
 - `cmd 2>> file` append stderr of cmd to file.
 
+### what is t-way test?
+
+Given any t parameters (out of all the parameters) of a system, every combination of values of these t parameters is covered in at least one test in the test set.
+
+i.e for a 2-way test (pairwise test), 2 parameters out of all the parameters of a
+
 ### Running ACTS3.0
 
-	java -jar acts_3.0.jar 
+	TSLgenerator spec 
+	java -jar acts_3.0.jar specfile
 
 ## TODO

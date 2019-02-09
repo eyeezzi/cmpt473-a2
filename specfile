@@ -1,0 +1,28 @@
+[System]
+Name: csv2json
+
+[Parameter]
+
+-- Environment
+Src_File_Exists (boolean) : TRUE, FALSE
+
+-- Command Flags
+No_Header (boolean) : TRUE, FALSE
+Src (enum) : STDIN, DISKFILE
+Dest (enum) : STDOUT, DISKFILE
+
+-- From CSV Spec
+File_With_Header (boolean) : TRUE, FALSE
+Number_Of_Records (enum) : ZERO, GTZERO
+Field_Type_In_Record (enum): ESCAPED, NONESCAPED, DONTCARE
+Same_Field_Count_Per_Record (boolean) : TRUE, FALSE
+
+[Constraint]
+Src = "DISKFILE"
+Dest = "DISKFILE"
+Src_File_Exists = true
+Field_Type_In_Record = "ESCAPED" => Number_Of_Records = "GTZERO"
+Field_Type_In_Record = "NONESCAPED" => Number_Of_Records = "GTZERO"
+
+-- mode=scratch, strength=2
+-- java -Ddoi=2 -Dcombine=all -Dcheck=on -jar bin/acts_3.0.jar specfile testframes.txt

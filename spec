@@ -4,39 +4,43 @@
 Environments:
 
 	Source file exists:
-		true.
-		false.
+		True.							[property fileExists]
+		False.							[Error][single]
 
 	
 Parameters:
 
-# File
+# no-header flag
+	No-header flag specified:
+		True.							[if fileExists][property noHeader][single]
+		False.							[if fileExists]
+
+# Source file
+	
 	Source file type:
 		# default stdin
 		Stdin.
-		Diskfile.
-
+		Diskfile.						[if fileExists]
 	Number of records in file:
-		0.
-		1.
-		>1.
-
+		0.								[property noRecord][single]
+		>0.								[property hasRecords]
+	Size:
+		Empty.							[if noHeader && noRecord][single]			
+		Not Empty.						[if !noHeader || !noRecord]
 	All records have same number of fields:
-		True.
-		False.
-	
+		True.							[if !noRecord] [property validFieldContent]
+		False.							[if !noRecord][single]
+	Number of fields per record:
+		1.								[if validFieldContent]
+		>1.								[if validFieldContent]
 	Existence of enclosed fields in records:
-		True.
-		False.
-	
+		True.							[if hasRecords] [property hasEnclosedFields]
+		False.							[if hasRecords]
 	Existence of field with DQUOTE or CRLF or COMMA:
-		True.
-		False.
+		True.							[if hasRecords && hasEnclosedFields]
+		False.							[if hasRecords]
 
-# no-header flag
-	No-header flag specified:
-		True.
-		False.
+
 
 # Destination file
 	Destination file type:
